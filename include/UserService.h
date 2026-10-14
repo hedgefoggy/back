@@ -1,22 +1,27 @@
 #pragma once
 
 #include <string>
-#include "UserManager.h"
+#include <cstddef> // size_t
+#include <optional>
+
+#include "IUserRepository.h"
 
 class UserService
 {
 private:
-    UserManager manager;
+    IUserRepository& repository;
 
 public:
+    explicit UserService(IUserRepository& repository);
+
     bool register_user(int id, const std::string& name, int age);
 
-    User* find_user(int id);
+    std::optional<User> find(int id) const;
 
-    bool delete_user(int id);
+    bool remove(int id);
 
-    int get_user_count() const;
+    std::size_t count() const;
 
-    bool update_user(int id, const std::string& name, int age);
+    bool update(int id, const std::string& name, int age);
     
 };

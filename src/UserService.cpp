@@ -1,30 +1,35 @@
 #include "UserService.h"
 
+UserService::UserService(IUserRepository& repository)
+    : repository(repository)
+{
+}
+
 bool UserService::register_user(
     int id,
     const std::string& name,
     int age
 )
 {
-    return manager.add_user_if_not_exists(id, name, age);
+    return repository.add(id, name, age);
 }
 
-User* UserService::find_user(int id)
+std::optional<User> UserService::find(int id) const
 {
-    return manager.find_user(id);
+    return repository.find(id);
 }
 
-bool UserService::delete_user(int id)
+bool UserService::remove(int id)
 {
-    return manager.delete_user(id);
+    return repository.remove(id);
 }
 
-int UserService::get_user_count() const
+std::size_t UserService::count() const
 {
-    return manager.get_user_count();
+    return repository.count();
 }
 
-bool UserService::update_user(int id, const std::string& name, int age)
+bool UserService::update(int id, const std::string& name, int age)
 {
-    return manager.update_user(id, name, age);
+    return repository.update(id, name, age);
 }

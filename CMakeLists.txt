@@ -29,8 +29,8 @@ FetchContent_MakeAvailable(Crow)
 
 add_library(core
     src/User.cpp
-    src/UserManager.cpp
     src/UserService.cpp
+    src/InMemoryUserRepository.cpp
 )
 
 target_include_directories(core PUBLIC

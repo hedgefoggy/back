@@ -2,11 +2,12 @@
 
 #include "UserService.h"
 #include "TestUtils.h"
-
+#include "InMemoryUserRepository.h"
 
 bool run_user_service_tests()
 {
-    UserService service;
+    InMemoryUserRepository repo;
+    UserService service(repo);
 
     bool all_tests_passed = true;
 
@@ -24,61 +25,61 @@ bool run_user_service_tests()
 
     all_tests_passed = 
         check(
-            service.get_user_count() == 1,
+            service.count() == 1u,
             "SERVICE USER COUNT"
         ) && all_tests_passed;
 
     all_tests_passed = 
         check(
-            service.update_user(1, "Bob", 30),
+            service.update(1, "Bob", 30),
             "UPDATE EXISTING USER"
         ) && all_tests_passed;
 
     all_tests_passed = 
         check(
-            service.find_user(1)->get_name() == "Bob",
+            service.find(1)->get_name() == "Bob",
             "CHECK UPDATE NAME"
         ) && all_tests_passed;
     
     all_tests_passed = 
         check(
-            service.find_user(1)->get_age() == 30,
+            service.find(1)->get_age() == 30,
             "CHECK UPDATE AGE"
         ) && all_tests_passed;
 
     all_tests_passed = 
         check(
-            service.update_user(99, "Nobody", 100) == false,
+            service.update(99, "Nobody", 100) == false,
             "UPDATE NON EXISTING USER"
         ) && all_tests_passed;        
     
     all_tests_passed = 
         check(
-            service.find_user(1) != nullptr,
+            service.find(1).has_value(),
             "FIND EXISTING USER"
         ) && all_tests_passed;
 
     all_tests_passed = 
         check(
-            service.find_user(99) == nullptr,
+            !service.find(99).has_value(),
             "FIND NON EXISTING USER"
         ) && all_tests_passed;
 
     all_tests_passed = 
         check(
-            service.delete_user(1),
+            service.remove(1),
             "DELETE EXISTING USER"
         ) && all_tests_passed;
 
     all_tests_passed = 
         check(
-            service.get_user_count() == 0,
+            service.count() == 0u,
             "COUNT AFTER DELETE"
         ) && all_tests_passed;
 
     all_tests_passed = 
         check(
-            service.delete_user(1) == false,
+            service.remove(1) == false,
             "DELETE NON EXISTING USER"
         ) && all_tests_passed;
 
